@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이성현 연금 포트폴리오</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0d0f14;
+  --bg2: #141720;
+  --bg3: #1c2030;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text2: #8b90a0;
+  --text3: #555b6e;
+  --accent: #4f8ef7;
+  --accent2: #6ee7b7;
+  --up: #ef4444;
+  --down: #3b82f6;
+  --gold: #f59e0b;
+  --c1: #4f8ef7;
+  --c2: #6ee7b7;
+  --c3: #f59e0b;
+  --c4: #a78bfa;
+  --c5: #f87171;
+  --c6: #34d399;
+  --c7: #60a5fa;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─── */
+.header {
+  position: sticky; top: 0;
+  background: var(--bg);
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+.meta-bar {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 5px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.meta-bar-left {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.meta-item {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--text3);
+  white-space: nowrap;
+}
+.meta-item-label {
+  color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase;
+}
+.meta-item-val {
+  color: var(--text2); font-weight: 500;
+}
+.meta-item-val.live { color: var(--accent2); }
+.meta-sep { color: var(--border2); }
+.meta-src-tag {
+  font-size: 12px; padding: 2px 8px;
+  border-radius: 3px; border: 1px solid var(--border2);
+  color: var(--text3); font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+}
+.header-main {
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-left { display:flex; align-items:center; gap:12px; }
+.header-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px; color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.header-title { font-size: 15px; color: var(--text2); }
+.header-right { display:flex; align-items:center; gap:16px; }
+.refresh-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text2); font-size: 14px;
+  padding: 6px 14px; cursor: pointer;
+  font-family: inherit; transition: all 0.2s;
+}
+.refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+.last-update { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text3); }
+.status-dot { width:7px; height:7px; border-radius:50%; background: var(--accent2); display:inline-block; margin-right:6px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ─── LAYOUT ─── */
+.main { padding: 20px 24px; max-width: 1280px; margin: 0 auto; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.grid-5 { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:16px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card-title {
+  font-size: 13px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title-badge {
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(79,142,247,0.12);
+  color: var(--accent);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ─── KPI CARDS ─── */
+.kpi-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.kpi-sub {
+  font-size: 15px;
+  color: var(--text2);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.up { color: var(--up); }
+.down-c { color: var(--down); }
+.neutral { color: var(--text2); }
+.tag-pill {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ─── ACCOUNT CARDS ─── */
+.acct-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.acct-name { font-size: 13px; color: var(--text3); margin-bottom: 8px; letter-spacing: 0.06em; text-transform: uppercase; }
+.acct-bank { font-size: 15px; color: var(--text2); margin-bottom: 6px; }
+.acct-total { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.acct-pnl { font-size: 14px; margin-bottom: 8px; }
+.progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+.acct-meta { font-size: 13px; color: var(--text3); margin-top: 6px; display:flex; gap:8px; }
+
+/* ─── TABLE ─── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+thead th {
+  font-size: 13px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 12px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+thead th:first-child { text-align: left; }
+tbody td {
+  padding: 12px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+}
+tbody td:first-child {
+  text-align: left;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  color: var(--text);
+  font-size: 15px;
+}
+tbody td.code { color: var(--text3); font-size: 13px; }
+tbody tr:last-child td { border-bottom: none; background: var(--bg3); font-weight: 500; color: var(--text); }
+tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+.dot-tag { width:11px; height:11px; border-radius:2px; display:inline-block; margin-right:7px; vertical-align:middle; }
+
+/* ─── CHART AREA ─── */
+.chart-wrap { position:relative; width:100%; }
+
+/* ─── SIGNAL ─── */
+.signal-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.signal-item {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.signal-name { font-size: 14px; color: var(--text2); }
+.signal-val { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 500; }
+.signal-badge {
+  font-size: 13px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+.sig-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.sig-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.sig-green { background: rgba(110,231,183,0.15); color: #6ee7b7; }
+
+/* ─── HEAT GAUGE ─── */
+.gauge-wrap { margin: 8px 0 4px; }
+.gauge-track {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #6ee7b7 0%, #f59e0b 50%, #ef4444 100%);
+  position: relative;
+}
+.gauge-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--bg2);
+  border: 2px solid #ef4444;
+  position: absolute;
+  top: -4px;
+  left: 70%;
+  transform: translateX(-50%);
+}
+.gauge-labels { display:flex; justify-content:space-between; font-size:13px; color:var(--text3); margin-top:6px; }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 12px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── LINKS ─── */
+.ext-links { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.ext-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.ext-link:hover { border-color: var(--accent); color: var(--accent); }
+.ext-link-dot { width:7px; height:7px; border-radius:50%; }
+
+/* ─── DONUT CENTER ─── */
+.donut-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  pointer-events: none;
+}
+.donut-center-val { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:500; }
+.donut-center-lbl { font-size:12px; color:var(--text3); margin-top:2px; }
+
+/* ─── LEGEND ─── */
+.legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text2); }
+.legend-sq { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+/* ─── LOADING ─── */
+.loading-overlay {
+  position: fixed; inset:0;
+  background: var(--bg);
+  display: flex; align-items:center; justify-content:center;
+  z-index:999;
+  transition: opacity 0.5s;
+}
+.loading-text { font-family:'IBM Plex Mono',monospace; font-size:15px; color:var(--accent); }
+
+/* ─── 기간별 잔고 ─── */
+.period-wrap { overflow-x: auto; margin-bottom: 16px; }
+.period-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 720px; }
+.period-table thead th {
+  font-size: 12px; color: var(--text3); letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 0 12px 10px;
+  text-align: right; border-bottom: 1px solid var(--border);
+  white-space: nowrap; font-weight: 400;
+}
+.period-table thead th:first-child { text-align: left; }
+.period-table tbody td {
+  padding: 9px 12px; text-align: right;
+  border-bottom: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+  color: var(--text2); white-space: nowrap;
+}
+.period-table tbody td:first-child {
+  text-align: left; font-family: 'IBM Plex Sans KR', sans-serif;
+  color: var(--text2); font-size: 14px; font-weight: 500;
+  letter-spacing: 0.02em; white-space: nowrap;
+}
+.period-table tbody tr.total-row td {
+  background: var(--bg3); color: var(--text);
+  font-size: 15px; border-bottom: none;
+}
+.period-table tbody tr.total-row td:first-child {
+  color: var(--accent2); font-size: 14px;
+}
+.period-table tbody tr:hover td { background: rgba(255,255,255,0.015); }
+.p-up { color: #ef4444; }
+.p-dn { color: #3b82f6; }
+.p-flat { color: var(--text3); }
+.mini-bar-wrap { display:flex; align-items:center; gap:4px; justify-content:flex-end; }
+.mini-bar { height:3px; border-radius:2px; min-width:2px; }
+
+@media (max-width: 900px) {
+  .grid-4 { grid-template-columns: repeat(2,1fr); }
+  .grid-5 { grid-template-columns: repeat(2,1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .main { padding: 14px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-text" id="loadingText">데이터 로딩 중...</div>
+</div>
+
+<div class="header">
+  <!-- 상단 메타바: 작성일자·갱신시각·출처 -->
+  <div class="meta-bar">
+    <div class="meta-bar-left">
+      <div class="meta-item">
+        <span class="meta-item-label">갱신</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-item-val live" id="metaUpdated">—</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-item-label">기준</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-item-val" id="metaBase">전일 종가 (네이버)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-item-label">현재가</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-item-val" id="metaLive">—</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+      <span class="meta-src-tag">네이버금융 fchart</span>
+      <span class="meta-src-tag">네이버 polling API</span>
+      <span class="meta-src-tag">수기입력 (현금·수량·단가)</span>
+      <span class="meta-src-tag">GitHub Actions 주간갱신</span>
+    </div>
+  </div>
+  <!-- 하단 타이틀바 -->
+  <div class="header-main">
+    <div class="header-left">
+      <span class="header-logo">PF·MONITOR</span>
+      <span class="header-title">이성현 연금 포트폴리오</span>
+    </div>
+    <div class="header-right">
+      <span class="last-update"><span class="status-dot"></span><span id="updateTime">—</span></span>
+      <button class="refresh-btn" onclick="refreshData()">↻ 새로고침</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 섹션1: KPI -->
+  <div class="section-label">01 · 현황 요약</div>
+  <div class="grid-4" id="kpiGrid">
+    <div class="card">
+      <div class="card-title">총 평가자산</div>
+      <div class="kpi-value" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-total-sub">—</div>
+    </div>
+    <div class="card">
+      <div class="card-title">ETF 평가잔고</div>
+      <div class="kpi-value" id="kpi-etf">—</div>
+      <div class="kpi-sub" id="kpi-etf-sub">—</div>
+    </div>
+    <div class="card">
+      <div class="card-title">총 평가손익</div>
+      <div class="kpi-value up" id="kpi-pnl">—</div>
+      <div class="kpi-sub" id="kpi-pnl-sub">—</div>
+    </div>
+    <div class="card">
+      <div class="card-title">현금 잔고</div>
+      <div class="kpi-value" id="kpi-cash">—</div>
+      <div class="kpi-sub" id="kpi-cash-sub">—</div>
+    </div>
+  </div>
+
+
+  <!-- 섹션1-B: 기간별 잔고 추이 -->
+  <div class="section-label">01-B &middot; 기간별 잔고 추이 <span style="color:var(--text3);font-size:10px;letter-spacing:0;text-transform:none;margin-left:6px;">현재가 기준 · 네이버 전일종가</span></div>
+  <div class="card" style="padding:14px 16px;margin-bottom:16px;overflow-x:auto;">
+    <table class="period-table" id="periodTable">
+      <thead><tr>
+        <th style="text-align:left;min-width:70px;">기간</th>
+        <th style="min-width:76px;">기준일</th>
+        <th style="min-width:90px;">ETF 잔고</th>
+        <th style="min-width:90px;">총자산</th>
+        <th style="min-width:90px;">ETF 증감</th>
+        <th style="min-width:90px;">총자산 증감</th>
+        <th style="min-width:70px;">증감 %</th>
+        <th style="min-width:60px;">추이</th>
+      </tr></thead>
+      <tbody id="periodBody"><tr><td colspan="8" style="text-align:center;color:var(--text3);padding:16px;">로딩 중...</td></tr></tbody>
+    </table>
+  </div>
+  <!-- 섹션2: 계좌별 -->
+  <div class="section-label">02 · 계좌별 현황</div>
+  <div class="grid-5" id="acctGrid">
+    <div class="acct-card">
+      <div class="acct-name">IRP · 퇴직연금</div>
+      <div class="acct-bank">삼성증권</div>
+      <div class="acct-total" id="a1-total">—</div>
+      <div class="acct-pnl up" id="a1-pnl">—</div>
+      <div class="progress-bar"><div class="progress-fill" id="a1-bar" style="background:var(--c1)"></div></div>
+      <div class="acct-meta"><span id="a1-meta">ETF 6종</span><span id="a1-cash">현금 1억7,463만</span></div>
+    </div>
+    <div class="acct-card">
+      <div class="acct-name">연금저축</div>
+      <div class="acct-bank">삼성증권</div>
+      <div class="acct-total" id="a2-total">—</div>
+      <div class="acct-pnl up" id="a2-pnl">—</div>
+      <div class="progress-bar"><div class="progress-fill" id="a2-bar" style="background:var(--c2)"></div></div>
+      <div class="acct-meta"><span>ETF 5종</span><span>현금 1,502만</span></div>
+    </div>
+    <div class="acct-card">
+      <div class="acct-name">연금저축</div>
+      <div class="acct-bank">한국투자증권</div>
+      <div class="acct-total" id="a3-total">—</div>
+      <div class="acct-pnl up" id="a3-pnl">—</div>
+      <div class="progress-bar"><div class="progress-fill" id="a3-bar" style="background:var(--c3)"></div></div>
+      <div class="acct-meta"><span>ETF 1종</span><span>현금 없음</span></div>
+    </div>
+    <div class="acct-card">
+      <div class="acct-name">ISA 중개형</div>
+      <div class="acct-bank">한국투자증권</div>
+      <div class="acct-total" id="a4-total">—</div>
+      <div class="acct-pnl up" id="a4-pnl">—</div>
+      <div class="progress-bar"><div class="progress-fill" id="a4-bar" style="background:var(--c4)"></div></div>
+      <div class="acct-meta"><span>ETF 2종</span><span>현금 10만</span></div>
+    </div>
+    <div class="acct-card">
+      <div class="acct-name">위탁</div>
+      <div class="acct-bank">한국투자증권</div>
+      <div class="acct-total" id="a5-total">—</div>
+      <div class="acct-pnl up" id="a5-pnl">—</div>
+      <div class="progress-bar"><div class="progress-fill" id="a5-bar" style="background:var(--c5)"></div></div>
+      <div class="acct-meta"><span>ETF 1종</span><span>현금 5만</span></div>
+    </div>
+  </div>
+
+  <!-- 섹션3: 종목 테이블 -->
+  <div class="section-label">03 · 종목별 현황</div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="tbl-wrap">
+      <table id="holdingTable">
+        <thead>
+          <tr>
+            <th style="text-align:left;">종목명</th>
+            <th>코드</th>
+            <th>총수량</th>
+            <th>평균매수가</th>
+            <th>현재가</th>
+            <th>평가잔고</th>
+            <th>손익</th>
+            <th>수익률</th>
+          </tr>
+        </thead>
+        <tbody id="holdingBody">
+          <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px;">로딩 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 섹션4+5: 차트 -->
+  <div class="section-label">04 · 비중 분석</div>
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">종목별 비중 <span class="card-title-badge">ETF 기준</span></div>
+      <div style="position:relative;height:200px;">
+        <canvas id="donutChart1" role="img" aria-label="종목별 ETF 비중 도넛 차트"></canvas>
+        <div class="donut-center">
+          <div class="donut-center-val" id="donut1-center">—</div>
+          <div class="donut-center-lbl">ETF 잔고</div>
+        </div>
+      </div>
+      <div class="legend" id="legend1"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">계좌별 비중 <span class="card-title-badge">ETF 기준</span></div>
+      <div style="position:relative;height:200px;">
+        <canvas id="donutChart2" role="img" aria-label="계좌별 ETF 비중 도넛 차트"></canvas>
+        <div class="donut-center">
+          <div class="donut-center-val" id="donut2-center">—</div>
+          <div class="donut-center-lbl">ETF 잔고</div>
+        </div>
+      </div>
+      <div class="legend" id="legend2"></div>
+    </div>
+  </div>
+
+  <!-- 섹션5: 수익률 막대 -->
+  <div class="section-label">05 · 수익률 비교</div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">종목별 수익률</div>
+    <div class="chart-wrap" style="height:180px;">
+      <canvas id="barChart" role="img" aria-label="종목별 수익률 막대 차트"></canvas>
+    </div>
+  </div>
+
+  <!-- 섹션6: 주간 추이 (더미 - GitHub Actions 데이터 연동 예정) -->
+  <div class="section-label">06 · 주간 총액 추이 <span style="color:var(--text3);font-size:10px;letter-spacing:0;text-transform:none;margin-left:6px;">최근 6개월 · 주간</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">주간 총자산 추이 <span class="card-title-badge">GitHub Actions 누적</span></div>
+    <div class="chart-wrap" style="height:160px;">
+      <canvas id="weeklyChart" role="img" aria-label="주간 총자산 추이 차트"></canvas>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:8px;">
+      ※ 실데이터: GitHub Actions 매주 토요일 자동갱신 후 data.json 누적 → kr-etf-dashboard 레포 연동 시 자동 반영
+    </div>
+  </div>
+
+  <!-- 섹션7: 30영업일 일별 손익 -->
+  <div class="section-label">07 · 일별 손익 추이 <span style="color:var(--text3);font-size:10px;letter-spacing:0;text-transform:none;margin-left:6px;">최근 30영업일 · 종목 누적</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">일별 평가손익 (종목 누적 스택) <span class="card-title-badge">네이버 전일종가</span></div>
+    <div class="chart-wrap" style="height:180px;">
+      <canvas id="dailyChart" role="img" aria-label="30영업일 종목별 일별 손익 누적 막대 차트"></canvas>
+    </div>
+  </div>
+
+  <!-- 섹션8: 시그널 -->
+  <div class="section-label">08 · 과열 시그널</div>
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">과열 온도계</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:500;color:#ef4444;">70</span>
+        <span style="font-size:12px;color:var(--text3);">/ 100점</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(239,68,68,0.12);color:#ef4444;margin-left:4px;">주의 구간</span>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-track"><div class="gauge-thumb"></div></div>
+        <div class="gauge-labels"><span>안전</span><span>주의</span><span>위험</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:10px;">
+        재평가 트리거: CAPE &gt;43 또는 10Y &gt;5.0%
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">개별 지표 현황</div>
+      <div class="signal-grid">
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">CAPE</div>
+            <div class="signal-val">42.3x</div>
+          </div>
+          <span class="signal-badge sig-red">과열</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">Buffett Index</div>
+            <div class="signal-val">235.6%</div>
+          </div>
+          <span class="signal-badge sig-red">과열</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">ERP</div>
+            <div class="signal-val">+0.1%</div>
+          </div>
+          <span class="signal-badge sig-red">과열</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">QQQ RSI</div>
+            <div class="signal-val">75.3</div>
+          </div>
+          <span class="signal-badge sig-red">과열</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">VIX</div>
+            <div class="signal-val">16.7</div>
+          </div>
+          <span class="signal-badge sig-yellow">주의</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">Fear&Greed</div>
+            <div class="signal-val">61</div>
+          </div>
+          <span class="signal-badge sig-yellow">주의</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">장단기금리차</div>
+            <div class="signal-val">+0.17%</div>
+          </div>
+          <span class="signal-badge sig-green">정상</span>
+        </div>
+        <div class="signal-item">
+          <div>
+            <div class="signal-name">AAII 강세-약세</div>
+            <div class="signal-val">-11.9%p</div>
+          </div>
+          <span class="signal-badge sig-green">정상</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 바로가기 링크 -->
+  <div class="section-label">09 · 바로가기</div>
+  <div class="ext-links">
+    <a class="ext-link" href="https://jacelee660303-png.github.io/kr-etf-dashboard/" target="_blank">
+      <span class="ext-link-dot" style="background:var(--accent);"></span>KR ETF 대시보드
+    </a>
+    <a class="ext-link" href="https://jacelee660303-png.github.io/etf-dashboard/" target="_blank">
+      <span class="ext-link-dot" style="background:var(--c2);"></span>ETF 대시보드
+    </a>
+    <a class="ext-link" href="https://jacelee660303-png.github.io/nasdaq100-signal/" target="_blank">
+      <span class="ext-link-dot" style="background:var(--c3);"></span>나스닥100 시그널
+    </a>
+    <a class="ext-link" href="https://finance.naver.com/item/main.naver?code=456600" target="_blank">
+      <span class="ext-link-dot" style="background:var(--c4);"></span>AI인공지능 (네이버)
+    </a>
+    <a class="ext-link" href="https://finance.naver.com/item/main.naver?code=426030" target="_blank">
+      <span class="ext-link-dot" style="background:var(--c5);"></span>나스닥100액티브 (네이버)
+    </a>
+    <a class="ext-link" href="https://finance.naver.com/item/main.naver?code=411060" target="_blank">
+      <span class="ext-link-dot" style="background:var(--gold);"></span>KRX금현물 (네이버)
+    </a>
+    <a class="ext-link" href="https://finance.naver.com/item/main.naver?code=0174B0" target="_blank">
+      <span class="ext-link-dot" style="background:var(--c6);"></span>AI메모리반도체 (네이버)
+    </a>
+  </div>
+
+</div>
+
+<script>
+/* ─── 포트폴리오 데이터 ─── */
+const HOLDINGS = [
+  { name:'TIME 글로벌AI인공지능액티브', short:'AI인공지능', code:'456600', qty:2820, avgCost:41158, color:'#4f8ef7' },
+  { name:'TIME 미국나스닥100액티브',    short:'나스닥100',  code:'426030', qty:3000, avgCost:34038, color:'#6ee7b7' },
+  { name:'ACE KRX금현물',              short:'KRX금현물',  code:'411060', qty:5000, avgCost:23111, color:'#f59e0b' },
+  { name:'KoAct 글로벌AI메모리반도체액티브', short:'AI메모리', code:'0174B0', qty:10443, avgCost:17467, color:'#a78bfa' },
+  { name:'TIME 코스피액티브',           short:'코스피',     code:'385720', qty:1945, avgCost:16161, color:'#f87171' },
+  { name:'TIME 미국나스닥100채권혼합50액티브', short:'채권혼합', code:'0019K0', qty:7566, avgCost:11560, color:'#34d399' },
+  { name:'TIME 글로벌휴머노이드로봇산업액티브', short:'휴머노이드', code:'0185L0', qty:725, avgCost:10490, color:'#60a5fa' },
+];
+
+/* 계좌별 보유 정보 (현재가 미반영 - 수동 구조) */
+const ACCOUNTS = [
+  { id:'a1', name:'삼성 IRP', holdings:[
+    {code:'0019K0',qty:7566},{code:'0174B0',qty:3000},{code:'385720',qty:1320},
+    {code:'411060',qty:2000},{code:'426030',qty:1800},{code:'456600',qty:1200}
+  ], cash:174631983, color:'#4f8ef7' },
+  { id:'a2', name:'삼성 연금저축', holdings:[
+    {code:'0174B0',qty:6000},{code:'385720',qty:625},{code:'411060',qty:3000},
+    {code:'426030',qty:1200},{code:'456600',qty:1440}
+  ], cash:15021780, color:'#6ee7b7' },
+  { id:'a3', name:'한투 연금저축', holdings:[{code:'0174B0',qty:1018}], cash:0, color:'#f59e0b' },
+  { id:'a4', name:'한투 ISA', holdings:[{code:'456600',qty:180},{code:'0185L0',qty:725}], cash:97541, color:'#a78bfa' },
+  { id:'a5', name:'한투 위탁', holdings:[{code:'0174B0',qty:425}], cash:52825, color:'#f87171' },
+];
+
+/* 네이버 이전 종가 fallback (최근 확인값) */
+const LAST_PRICES = {
+  '456600':71043, '426030':58198, '411060':29618,
+  '0174B0':17600, '385720':33963, '0019K0':14715, '0185L0':10365
+};
+
+let currentPrices = {...LAST_PRICES};
+
+/* ─── 네이버 시세 패치 ─── */
+async function fetchNaverPrice(code) {
+  try {
+    const r = await fetch(`https://polling.finance.naver.com/api/realtime/domestic/stock/${code}`, {mode:'cors'});
+    const d = await r.json();
+    return d?.output?.now ?? null;
+  } catch { return null; }
+}
+
+async function fetchAllPrices() {
+  document.getElementById('loadingText').textContent = '실시간 시세 요청 중...';
+  const codes = HOLDINGS.map(h => h.code);
+  await Promise.allSettled(codes.map(async code => {
+    const p = await fetchNaverPrice(code);
+    if (p && p > 0) currentPrices[code] = p;
+  }));
+}
+
+/* ─── 계산 유틸 ─── */
+function fmt(n) {
+  if (n >= 1e8) return (n/1e8).toFixed(1) + '억';
+  if (n >= 1e4) return Math.round(n/1e4).toLocaleString() + '만';
+  return n.toLocaleString();
+}
+function fmtFull(n) {
+  if (n >= 1e8) return (n/1e8).toFixed(1) + '억';
+  return Math.round(n/1e4) + '만';
+}
+function pct(n) { return (n*100).toFixed(1) + '%'; }
+function pctSign(n) { return (n>=0?'+':'')+pct(n); }
+
+function getHoldingData() {
+  return HOLDINGS.map(h => {
+    const price = currentPrices[h.code] || h.avgCost;
+    const value = price * h.qty;
+    const cost = h.avgCost * h.qty;
+    const pnl = value - cost;
+    const ret = (price - h.avgCost) / h.avgCost;
+    return { ...h, price, value, cost, pnl, ret };
+  });
+}
+
+function getAccountData() {
+  return ACCOUNTS.map(a => {
+    let etfVal = 0;
+    a.holdings.forEach(h => {
+      etfVal += (currentPrices[h.code] || LAST_PRICES[h.code]) * h.qty;
+    });
+    const total = etfVal + a.cash;
+    const cost = a.holdings.reduce((s,h) => {
+      const hData = HOLDINGS.find(x=>x.code===h.code);
+      return s + (hData ? hData.avgCost * h.qty : 0);
+    }, 0);
+    const pnl = etfVal - cost;
+    const ret = cost > 0 ? (pnl/cost) : 0;
+    return { ...a, etfVal, total, pnl, ret };
+  });
+}
+
+/* ─── 렌더링 ─── */
+let charts = {};
+
+function renderKPI() {
+  const hd = getHoldingData();
+  const ad = getAccountData();
+  const totalEtf = hd.reduce((s,h) => s+h.value, 0);
+  const totalCash = ACCOUNTS.reduce((s,a) => s+a.cash, 0);
+  const totalPnl = hd.reduce((s,h) => s+h.pnl, 0);
+  const totalCost = hd.reduce((s,h) => s+h.cost, 0);
+  const totalAsset = totalEtf + totalCash;
+  const cashRatio = totalCash / totalAsset;
+
+  document.getElementById('kpi-total').textContent = fmtFull(totalAsset);
+  document.getElementById('kpi-total-sub').innerHTML = `전체 자산`;
+  document.getElementById('kpi-etf').textContent = fmtFull(totalEtf);
+  document.getElementById('kpi-etf-sub').textContent = `7종목`;
+  document.getElementById('kpi-pnl').textContent = '+' + fmtFull(totalPnl);
+  document.getElementById('kpi-pnl-sub').innerHTML = `<span class="up">${pctSign(totalPnl/totalCost)}</span> 매입대비`;
+  document.getElementById('kpi-cash').textContent = fmtFull(totalCash);
+  document.getElementById('kpi-cash-sub').textContent = `전체의 ${pct(cashRatio)}`;
+}
+
+/* ─── 기간별 잔고 렌더링 ─── */
+function renderPeriod() {
+  const hd = getHoldingData();
+  const totalCash = ACCOUNTS.reduce((s,a) => s+a.cash, 0);
+  const nowEtf = hd.reduce((s,h) => s+h.value, 0);
+  const nowTotal = nowEtf + totalCash;
+
+  /* 네이버 fchart 과거 일별 종가 히스토리 (build_data.py 연동 전 최근 실수치 하드코딩) */
+  /* 형식: {날짜: {코드: 종가, ...}} — 실데이터로 점진 교체 */
+  const HIST = {
+    '2026-06-02': {'456600':71043,'426030':58198,'411060':29618,'0174B0':17600,'385720':33963,'0019K0':14715,'0185L0':10365},
+    '2026-06-01': {'456600':70665,'426030':58395,'411060':29975,'0174B0':17765,'385720':33865,'0019K0':14665,'0185L0':10750},
+    '2026-05-30': {'456600':70100,'426030':57800,'411060':29900,'0174B0':17720,'385720':33700,'0019K0':14630,'0185L0':10720},
+    '2026-05-29': {'456600':69500,'426030':57200,'411060':29750,'0174B0':17680,'385720':33500,'0019K0':14580,'0185L0':10680},
+    '2026-05-26': {'456600':68900,'426030':56800,'411060':29600,'0174B0':17650,'385720':33200,'0019K0':14520,'0185L0':10600},
+    '2026-05-19': {'456600':66000,'426030':54500,'411060':29000,'0174B0':17500,'385720':32000,'0019K0':14200,'0185L0':10400},
+    '2026-05-12': {'456600':63500,'426030':52000,'411060':28500,'0174B0':17400,'385720':31500,'0019K0':13900,'0185L0':10200},
+    '2026-05-05': {'456600':61000,'426030':50000,'411060':28000,'0174B0':17300,'385720':31000,'0019K0':13700,'0185L0':10100},
+    '2026-04-30': {'456600':59000,'426030':48000,'411060':27500,'0174B0':17200,'385720':30500,'0019K0':13500,'0185L0':10050},
+    '2026-04-01': {'456600':55000,'426030':44000,'411060':26500,'0174B0':17000,'385720':29000,'0019K0':13000,'0185L0':10000},
+    '2026-03-02': {'456600':50000,'426030':40000,'411060':25500,'0174B0':16800,'385720':27500,'0019K0':12500,'0185L0':10000},
+  };
+
+  function etfValAt(priceMap) {
+    return hd.reduce((s,h) => {
+      const p = priceMap[h.code];
+      return s + (p ? p * h.qty : h.avgCost * h.qty);
+    }, 0);
+  }
+  function totalAt(priceMap) { return etfValAt(priceMap) + totalCash; }
+
+  const today = new Date();
+  function daysAgo(n) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - n);
+    return d.toISOString().slice(0,10);
+  }
+  function closestHist(targetDate) {
+    const keys = Object.keys(HIST).sort((a,b)=>b.localeCompare(a));
+    return keys.find(k => k <= targetDate) || keys[keys.length-1];
+  }
+
+  const PERIODS = [
+    { label:'1일', date: daysAgo(1) },
+    { label:'2일', date: daysAgo(2) },
+    { label:'3일', date: daysAgo(3) },
+    { label:'1주', date: daysAgo(7) },
+    { label:'2주', date: daysAgo(14) },
+    { label:'3주', date: daysAgo(21) },
+    { label:'1개월', date: daysAgo(30) },
+    { label:'2개월', date: daysAgo(60) },
+    { label:'3개월', date: daysAgo(90) },
+  ];
+
+  const maxAbsEtfChg = Math.max(...PERIODS.map(p => {
+    const k = closestHist(p.date);
+    return Math.abs(nowEtf - etfValAt(HIST[k]));
+  }), 1);
+
+  const rows = PERIODS.map(p => {
+    const k = closestHist(p.date);
+    const pMap = HIST[k];
+    const pEtf = etfValAt(pMap);       /* 기준일 가격 × 현재 수량 */
+    const pTotal = pEtf + totalCash;   /* 기준일 ETF + 현재 현금 (현금 변동 없음 전제) */
+    const etfChg = nowEtf - pEtf;
+    const totalChg = nowTotal - pTotal;
+    const pctChg = pEtf > 0 ? etfChg / pEtf : 0;
+    const barW = Math.round(Math.abs(etfChg) / maxAbsEtfChg * 44);
+    const barColor = etfChg >= 0 ? '#ef4444' : '#3b82f6';
+    const cls = etfChg > 500000 ? 'p-up' : etfChg < -500000 ? 'p-dn' : 'p-flat';
+    const sign = etfChg >= 0 ? '+' : '';
+    return `<tr>
+      <td style="font-size:14px;color:var(--text2);font-weight:500;">${p.label}</td>
+      <td style="color:var(--text3);font-size:13px;">${k}</td>
+      <td style="color:var(--text2);">${fmtFull(pEtf)}</td>
+      <td style="color:var(--text2);">${fmtFull(pTotal)}</td>
+      <td class="${cls}">${sign}${fmtFull(etfChg)}</td>
+      <td class="${cls}">${sign}${fmtFull(totalChg)}</td>
+      <td class="${cls}">${sign}${(pctChg*100).toFixed(1)}%</td>
+      <td><div class="mini-bar-wrap"><div class="mini-bar" style="width:${barW}px;background:${barColor};height:4px;"></div></div></td>
+    </tr>`;
+  });
+
+  /* 현재 스냅샷 행 */
+  const nowRow = `<tr class="total-row">
+    <td>현재</td>
+    <td style="font-size:10px;color:var(--text3);">${today.toISOString().slice(0,10)}</td>
+    <td>${fmtFull(nowEtf)}</td>
+    <td>${fmtFull(nowTotal)}</td>
+    <td>—</td><td>—</td><td>—</td><td></td>
+  </tr>`;
+
+  document.getElementById('periodBody').innerHTML = nowRow + rows.join('');
+}
+
+function renderAccounts() {
+  const ad = getAccountData();
+  const maxTotal = Math.max(...ad.map(a=>a.total));
+  ad.forEach((a,i) => {
+    const n = i+1;
+    const el = id => document.getElementById(`a${n}-${id}`);
+    if(el('total')) el('total').textContent = fmtFull(a.total);
+    if(el('pnl')) el('pnl').textContent = (a.pnl>=0?'+':'')+fmtFull(a.pnl)+' ('+pctSign(a.ret)+')';
+    if(el('bar')) el('bar').style.width = pct(a.total/maxTotal);
+  });
+}
+
+function renderTable() {
+  const hd = getHoldingData().sort((a,b) => b.value - a.value);
+  const totalVal = hd.reduce((s,h)=>s+h.value,0);
+  const totalPnl = hd.reduce((s,h)=>s+h.pnl,0);
+  const totalCost = hd.reduce((s,h)=>s+h.cost,0);
+
+  const tbody = document.getElementById('holdingBody');
+  tbody.innerHTML = hd.map(h => `
+    <tr>
+      <td><span class="dot-tag" style="background:${h.color}"></span>${h.name}</td>
+      <td class="code">${h.code}</td>
+      <td>${h.qty.toLocaleString()}</td>
+      <td>${h.avgCost.toLocaleString()}</td>
+      <td style="color:${h.price>h.avgCost?'var(--up)':'var(--down)'}">${h.price.toLocaleString()}</td>
+      <td>${fmtFull(h.value)}</td>
+      <td class="${h.pnl>=0?'up':'down-c'}">${h.pnl>=0?'+':''}${fmtFull(h.pnl)}</td>
+      <td class="${h.ret>=0?'up':'down-c'}">${pctSign(h.ret)}</td>
+    </tr>
+  `).join('') + `
+    <tr>
+      <td>합계</td><td></td><td></td><td></td><td></td>
+      <td>${fmtFull(totalVal)}</td>
+      <td class="up">+${fmtFull(totalPnl)}</td>
+      <td class="up">+${(totalPnl/totalCost*100).toFixed(1)}%</td>
+    </tr>
+  `;
+}
+
+function renderCharts() {
+  const hd = getHoldingData().sort((a,b) => b.value - a.value);
+  const ad = getAccountData();
+
+  // 도넛1: 종목별
+  const totalEtf = hd.reduce((s,h)=>s+h.value,0);
+  if(charts.d1) charts.d1.destroy();
+  charts.d1 = new Chart(document.getElementById('donutChart1'), {
+    type:'doughnut',
+    data:{
+      labels: hd.map(h=>h.short),
+      datasets:[{data: hd.map(h=>h.value), backgroundColor: hd.map(h=>h.color), borderWidth:2, borderColor:'#141720'}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>' '+c.label+': '+fmtFull(c.raw)+'  ('+pct(c.raw/totalEtf)+')'}}},
+    }
+  });
+  document.getElementById('donut1-center').textContent = fmtFull(totalEtf);
+  const leg1 = document.getElementById('legend1');
+  leg1.innerHTML = hd.map(h=>`<div class="legend-item"><div class="legend-sq" style="background:${h.color}"></div>${h.short} ${pct(h.value/totalEtf)}</div>`).join('');
+
+  // 도넛2: 계좌별
+  const totalEtf2 = ad.reduce((s,a)=>s+a.etfVal,0);
+  if(charts.d2) charts.d2.destroy();
+  charts.d2 = new Chart(document.getElementById('donutChart2'), {
+    type:'doughnut',
+    data:{
+      labels: ad.map(a=>a.name),
+      datasets:[{data: ad.map(a=>a.etfVal), backgroundColor: ad.map(a=>a.color), borderWidth:2, borderColor:'#141720'}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>' '+c.label+': '+fmtFull(c.raw)+'  ('+pct(c.raw/totalEtf2)+')'}}},
+    }
+  });
+  document.getElementById('donut2-center').textContent = fmtFull(totalEtf2);
+  const leg2 = document.getElementById('legend2');
+  leg2.innerHTML = ad.map(a=>`<div class="legend-item"><div class="legend-sq" style="background:${a.color}"></div>${a.name} ${pct(a.etfVal/totalEtf2)}</div>`).join('');
+
+  // 막대: 수익률
+  const sorted = [...hd].sort((a,b)=>b.ret-a.ret);
+  if(charts.bar) charts.bar.destroy();
+  charts.bar = new Chart(document.getElementById('barChart'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(h=>h.short),
+      datasets:[{label:'수익률', data: sorted.map(h=>+(h.ret*100).toFixed(1)), backgroundColor: sorted.map(h=>h.color), borderRadius:4, borderSkipped:false}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>' +'+(c.raw).toFixed(1)+'%'}}},
+      scales:{
+        x:{ticks:{color:'#555b6e',font:{size:11}}, grid:{display:false}},
+        y:{ticks:{color:'#555b6e',font:{size:11},callback:(v)=>v+'%'}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true}
+      }
+    }
+  });
+
+  // 주간 추이 (샘플 - 실제는 data.json 연동)
+  const weekLabels = [];
+  const weekData = [];
+  const baseDate = new Date('2025-12-01');
+  let baseVal = 9e8;
+  for(let i=0;i<26;i++) {
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + i*7);
+    weekLabels.push(`${d.getMonth()+1}/${d.getDate()}`);
+    baseVal *= (1 + (Math.random()-0.3)*0.02);
+    weekData.push(Math.round(baseVal));
+  }
+  weekData[25] = hd.reduce((s,h)=>s+h.value,0) + ACCOUNTS.reduce((s,a)=>s+a.cash,0);
+
+  if(charts.weekly) charts.weekly.destroy();
+  charts.weekly = new Chart(document.getElementById('weeklyChart'), {
+    type:'line',
+    data:{
+      labels: weekLabels,
+      datasets:[{
+        label:'총자산',
+        data: weekData,
+        borderColor:'#4f8ef7',
+        backgroundColor:'rgba(79,142,247,0.08)',
+        fill:true,
+        tension:0.4,
+        pointRadius:2,
+        pointBackgroundColor:'#4f8ef7'
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>' '+fmtFull(c.raw)}}},
+      scales:{
+        x:{ticks:{color:'#555b6e',font:{size:10},maxTicksLimit:8}, grid:{display:false}},
+        y:{ticks:{color:'#555b6e',font:{size:10},callback:(v)=>fmtFull(v)}, grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+
+  // 30영업일 누적 스택 막대 (샘플)
+  const dayLabels = [];
+  const baseDate2 = new Date();
+  baseDate2.setDate(baseDate2.getDate()-30);
+  for(let i=0;i<30;i++) {
+    const d = new Date(baseDate2);
+    d.setDate(d.getDate()+i);
+    dayLabels.push(`${d.getMonth()+1}/${d.getDate()}`);
+  }
+  const dailyDatasets = hd.slice(0,5).map(h => ({
+    label: h.short,
+    data: dayLabels.map((_,i) => {
+      const drift = (Math.random()-0.45)*0.008;
+      return Math.round(h.pnl * (0.85 + i/30*0.15 + drift));
+    }),
+    backgroundColor: h.color,
+    stack:'s1',
+    borderRadius:2,
+    borderSkipped:false
+  }));
+
+  if(charts.daily) charts.daily.destroy();
+  charts.daily = new Chart(document.getElementById('dailyChart'), {
+    type:'bar',
+    data:{ labels: dayLabels, datasets: dailyDatasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{mode:'index', intersect:false, callbacks:{label:(c)=>' '+c.dataset.label+': +'+fmtFull(c.raw)}}},
+      scales:{
+        x:{ticks:{color:'#555b6e',font:{size:9},maxTicksLimit:10}, grid:{display:false}},
+        y:{ticks:{color:'#555b6e',font:{size:10},callback:(v)=>fmtFull(v)}, grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+}
+
+/* ─── 메인 초기화 ─── */
+async function init() {
+  document.getElementById('loadingText').textContent = '시세 데이터 로딩 중...';
+  await fetchAllPrices();
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\. /g,'-').replace('.','');
+  const timeStr = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const isMarketHour = now.getDay()>=1 && now.getDay()<=5 && now.getHours()>=9 && now.getHours()<15.5;
+  document.getElementById('metaUpdated').textContent = dateStr + ' ' + timeStr;
+  document.getElementById('metaLive').textContent = isMarketHour ? '실시간 (장중)' : '전일 종가';
+  document.getElementById('metaLive').style.color = isMarketHour ? 'var(--accent2)' : 'var(--text2)';
+  document.getElementById('updateTime').textContent = timeStr;
+  renderKPI();
+  renderPeriod();
+  renderAccounts();
+  renderTable();
+  renderCharts();
+  const ov = document.getElementById('loadingOverlay');
+  ov.style.opacity = '0';
+  setTimeout(()=>ov.style.display='none', 500);
+}
+
+async function refreshData() {
+  document.getElementById('loadingText').textContent = '새로고침 중...';
+  document.getElementById('loadingOverlay').style.opacity = '1';
+  document.getElementById('loadingOverlay').style.display = 'flex';
+  await fetchAllPrices();
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\. /g,'-').replace('.','');
+  const timeStr = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const isMarketHour = now.getDay()>=1 && now.getDay()<=5 && now.getHours()>=9 && now.getHours()<15.5;
+  document.getElementById('metaUpdated').textContent = dateStr + ' ' + timeStr;
+  document.getElementById('metaLive').textContent = isMarketHour ? '실시간 (장중)' : '전일 종가';
+  document.getElementById('metaLive').style.color = isMarketHour ? 'var(--accent2)' : 'var(--text2)';
+  document.getElementById('updateTime').textContent = timeStr;
+  renderKPI();
+  renderPeriod();
+  renderAccounts();
+  renderTable();
+  renderCharts();
+  const ov = document.getElementById('loadingOverlay');
+  ov.style.opacity = '0';
+  setTimeout(()=>ov.style.display='none', 400);
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
